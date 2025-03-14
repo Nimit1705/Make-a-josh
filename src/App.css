@@ -219,3 +219,47 @@ margin: 10px;
   font-size: 16px;
   opacity: 50%;
 }
+
+
+@media only screen and (max-width: 600px){
+  #nav{
+    width: 94vw;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    padding: unset;
+  }
+
+  .logo{
+    padding-left: 22%;
+  }
+
+  #nav::after{
+    scale: 101%;
+  }
+
+  body{
+    overflow-x: hidden !important;
+  }
+
+  .super-container{
+    margin: 0;
+    flex-direction: column;
+    scale: 70%;
+    position: absolute;
+    top: 0;
+    left: -15px;
+  }
+
+  .download{
+    position: absolute;
+    top: 90%;
+    left: 15%;
+  }
+
+  .footer{
+    width: 100vw;
+    /* border: 1px solid red; */
+    height: 10px;
+  }
+}
