@@ -38,7 +38,7 @@ const App = () => {
       const canvas = await html2canvas(containerRef.current, { backgroundColor: null });
       const link = document.createElement("a");
       link.href = canvas.toDataURL("image/png");
-      link.download = "merged-image.png";
+      link.download = "joss.png";
       link.click();
     }
   };
