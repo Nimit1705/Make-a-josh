@@ -36,10 +36,18 @@ const App = () => {
   const downloadImage = async () => {
     if (containerRef.current) {
       const canvas = await html2canvas(containerRef.current, { backgroundColor: null });
-      const link = document.createElement("a");
-      link.href = canvas.toDataURL("image/png");
-      link.download = "joss.png";
-      link.click();
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "joss.png";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }
+      }, "image/png");
     }
   };
 
