@@ -33,21 +33,81 @@ const App = () => {
     });
   };
 
+  // const downloadImage = async () => {
+  //   if (containerRef.current) {
+  //     const canvas = await html2canvas(containerRef.current, { backgroundColor: null });
+  //     canvas.toBlob((blob) => {
+  //       if (blob) {
+  //         const url = URL.createObjectURL(blob);
+  //         const link = document.createElement("a");
+  //         link.href = url;
+  //         link.download = "joss.png";
+  //         document.body.appendChild(link);
+  //         link.click();
+  //         document.body.removeChild(link);
+  //         URL.revokeObjectURL(url);
+  //       }
+  //     }, "image/png");
+  //   }
+  // };
   const downloadImage = async () => {
-    if (containerRef.current) {
+    if (!containerRef.current) return;
+  
+    try {
+      // Create canvas and convert to blob
       const canvas = await html2canvas(containerRef.current, { backgroundColor: null });
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = "joss.png";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (!blob) reject(new Error('Failed to create blob'));
+          resolve(blob);
+        }, 'image/png');
+      });
+  
+      // Try native download first
+      if ('download' in document.createElement('a')) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'joss.png';
+        
+        // Simulate click event
+        const clickEvent = new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+        });
+        
+        link.dispatchEvent(clickEvent);
+        
+        // Cleanup
+        setTimeout(() => {
           URL.revokeObjectURL(url);
-        }
-      }, "image/png");
+        }, 100);
+        
+        return;
+      }
+  
+      // Fallback for WebView environments
+      if (navigator.userAgent.match(/Android|iOS/i)) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64Data = reader.result;
+          const a = document.createElement('a');
+          a.href = base64Data;
+          a.download = 'joss.png';
+          a.click();
+        };
+        
+        reader.readAsDataURL(blob);
+      } else {
+        // Last resort: open in new window
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        setTimeout(() => URL.revokeObjectURL(url), 100);
+      }
+    } catch (error) {
+      console.error('Error downloading image:', error);
+      alert('Failed to download image. Please try again.');
     }
   };
 
