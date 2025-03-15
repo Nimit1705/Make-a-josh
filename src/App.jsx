@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
 import josh from "./assets/josh.png";
 import logo from "./assets/logo.png";
@@ -15,8 +15,6 @@ import bg9 from "./assets/bg9.png"
 import folder from "./assets/folder.svg"
 
 const App = () => {
-
-  
   const [style, setStyle] = useState({
     background: "#0000ff",
   });
