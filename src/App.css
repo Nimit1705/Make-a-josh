@@ -5,9 +5,10 @@
   text-align: center;
 }
 
-body {
-  min-width: 1024px;
-  overflow-x: auto; 
+body, html {
+  min-width: 1280px; 
+  transform-origin: top left;
+  transform: scale(1);
 }
 
 .nav{
